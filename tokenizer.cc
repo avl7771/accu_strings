@@ -1,63 +1,62 @@
-#include <assert.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <iostream>
+#include <string>
 
-const char kTokenOr[] = "OR";
-const char kTokenAnd[] = "AND";
-const char kTokenParenOpen[] = "(";
-const char kTokenParenClose[] = ")";
-const char kWhitespace[] = "\t\n\r ";
-const char kTokenSeparators[] = "\t\n\r ()";
+const std::string kTokenOr = "OR";
+const std::string kTokenAnd = "AND";
+const std::string kTokenParenOpen = "(";
+const std::string kTokenParenClose = ")";
+const std::string kWhitespace = "\t\n\r ";
+const std::string kTokenSeparators = "\t\n\r ()";
 
-void WriteToken(const char* token_start, size_t token_size) {
-  char* token = strndup(token_start, token_size);
-  printf("%s\n", token);
-  free(token);
+void WriteToken(const std::string& token) {
+  std::cout << token << std::endl;
 }
 
-size_t EatToken(const char* text) {
+size_t EatToken(const std::string& text) {
   // Skip whitespace
-  size_t next_token = strspn(text, kWhitespace);
+  size_t next_token = text.find_first_not_of(kWhitespace);
+  if (next_token == std::string::npos)
+    return text.length();
   if (next_token > 0)
     return next_token;
 
   // Check for separator tokens
-  if (strncmp(text, kTokenParenOpen, 1) == 0) {
-    WriteToken(kTokenParenOpen, 1);
+  if (text.substr(0, kTokenParenOpen.length()) == kTokenParenOpen) {
+    WriteToken(kTokenParenOpen);
     return 1;
   }
-  if (strncmp(text, kTokenParenClose, 1) == 0) {
-    WriteToken(kTokenParenClose, 1);
+  if (text.substr(0, kTokenParenClose.length()) == kTokenParenClose) {
+    WriteToken(kTokenParenClose);
     return 1;
   }
 
-  size_t token_size = strcspn(text, kTokenSeparators);
+  size_t token_size = text.find_first_of(kTokenSeparators);
+  if (token_size == std::string::npos)
+    token_size = text.length();
 
-  if (token_size == 2 && strncmp(text, kTokenOr, 2) == 0) {
-    WriteToken(kTokenOr, 2);
-  } else if (token_size == 3 && strncmp(text, kTokenAnd, 3) == 0) {
-    WriteToken(kTokenAnd, 3);
+  std::string token = text.substr(0, token_size);
+
+  if (token == kTokenOr) {
+    WriteToken(kTokenOr);
+  } else if (token == kTokenAnd) {
+    WriteToken(kTokenAnd);
   } else {
-    WriteToken(text, token_size);
+    WriteToken(token);
   }
 
   return token_size;
 }
 
-void Tokenize(const char* line) {
-  for (const char *current = line, *next = line; *current != '\0';
-       current = next) {
-    next = current + EatToken(current);
+void Tokenize(const std::string& line) {
+  for (auto current = line.begin(); current != line.end();) {
+    current = current + EatToken(std::string(current, line.end()));
   }
 }
 
 int main() {
-  // C-style version
-  char *input_line = nullptr;
-  size_t input_line_size = 0;
-  while (getline(&input_line, &input_line_size, stdin) > 0) {
+  // Version with std::string
+  std::string input_line;
+  while (std::getline(std::cin, input_line)) {
     Tokenize(input_line);
   }
-  free(input_line);
 }

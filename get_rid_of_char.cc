@@ -1,3 +1,4 @@
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -7,6 +8,7 @@ const char kTokenAnd[] = "AND";
 const char kTokenParenOpen[] = "(";
 const char kTokenParenClose[] = ")";
 const char kWhitespace[] = "\t\n\r ";
+const char kTokenSeparators[] = "\t\n\r ()";
 
 void WriteToken(const char* token_start, size_t token_size) {
   char* token = strndup(token_start, token_size);
@@ -15,10 +17,12 @@ void WriteToken(const char* token_start, size_t token_size) {
 }
 
 size_t EatToken(const char* text) {
+  // Skip whitespace
   size_t next_token = strspn(text, kWhitespace);
   if (next_token > 0)
     return next_token;
 
+  // Check for separator tokens
   if (strncmp(text, kTokenParenOpen, 1) == 0) {
     WriteToken(kTokenParenOpen, 1);
     return 1;
@@ -28,14 +32,12 @@ size_t EatToken(const char* text) {
     return 1;
   }
 
-  size_t token_size = strcspn(text, kWhitespace);
-  if (token_size == 0)
-    return 0;
+  size_t token_size = strcspn(text, kTokenSeparators);
 
   if (token_size == 2 && strncmp(text, kTokenOr, 2) == 0) {
     WriteToken(kTokenOr, 2);
   } else if (token_size == 3 && strncmp(text, kTokenAnd, 3) == 0) {
-    WriteToken(kTokenAnd, 2);
+    WriteToken(kTokenAnd, 3);
   } else {
     WriteToken(text, token_size);
   }

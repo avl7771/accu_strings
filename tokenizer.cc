@@ -1,18 +1,21 @@
 #include <iostream>
 #include <string>
+#include <experimental/string_view>
 
-const std::string kTokenOr = "OR";
-const std::string kTokenAnd = "AND";
-const std::string kTokenParenOpen = "(";
-const std::string kTokenParenClose = ")";
-const std::string kWhitespace = "\t\n\r ";
-const std::string kTokenSeparators = "\t\n\r ()";
+using std::experimental::string_view;
 
-void WriteToken(const std::string& token) {
+const string_view kTokenOr = "OR";
+const string_view kTokenAnd = "AND";
+const string_view kTokenParenOpen = "(";
+const string_view kTokenParenClose = ")";
+const string_view kWhitespace = "\t\n\r ";
+const string_view kTokenSeparators = "\t\n\r ()";
+
+void WriteToken(string_view token) {
   std::cout << token << std::endl;
 }
 
-size_t EatToken(const std::string& text) {
+size_t EatToken(string_view text) {
   // Skip whitespace
   size_t next_token = text.find_first_not_of(kWhitespace);
   if (next_token == std::string::npos)
@@ -34,7 +37,7 @@ size_t EatToken(const std::string& text) {
   if (token_size == std::string::npos)
     token_size = text.length();
 
-  std::string token = text.substr(0, token_size);
+  string_view token = text.substr(0, token_size);
 
   if (token == kTokenOr) {
     WriteToken(kTokenOr);
@@ -47,9 +50,9 @@ size_t EatToken(const std::string& text) {
   return token_size;
 }
 
-void Tokenize(const std::string& line) {
-  for (auto current = line.begin(); current != line.end();) {
-    current = current + EatToken(std::string(current, line.end()));
+void Tokenize(string_view line) {
+  for (string_view current = line; current.length() > 0;) {
+    current = current.substr(EatToken(current));
   }
 }
 

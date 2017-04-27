@@ -32,6 +32,7 @@ size_t EatToken(const char* text) {
     return 1;
   }
 
+  // Determine end of current token
   size_t token_size = strcspn(text, kTokenSeparators);
 
   if (token_size == 2 && strncmp(text, kTokenOr, 2) == 0) {

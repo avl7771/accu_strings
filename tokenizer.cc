@@ -46,9 +46,8 @@ size_t EatToken(const char* text) {
 }
 
 void Tokenize(const char* line) {
-  for (const char *current = line, *next = line; *current != '\0';
-       current = next) {
-    next = current + EatToken(current);
+  for (const char *current = line; *current != '\0';
+       current += EatToken(current)) {
   }
 }
 

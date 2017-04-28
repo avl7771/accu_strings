@@ -3,7 +3,7 @@
 #include <string>
 
 void CheckPools(const std::string& input) {
-  std::regex regex("(.*(swimming )?(pool(s)?).*)|(.*(bathing).*)",
+  std::regex regex("(.*(swimming )?pool(s)?.*)|(.*bathing.*)",
                    std::regex::icase);
 
   std::smatch matches;

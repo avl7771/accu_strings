@@ -14,7 +14,7 @@ struct Dictionary {
   V GetValue(const K& key) const {
     auto found = data_.find(key);
     if (found == data_.end())
-      return 0;
+      return V();
     return found->second;
   }
 

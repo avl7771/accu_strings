@@ -4,24 +4,25 @@
 
 #include "time_counter.h"
 
+template<typename K, typename V>
 struct Dictionary {
-  bool Add(const std::string& key, const int value) {
+  bool Add(const K& key, const V& value) {
     auto result = data_.emplace(key, value);
     return result.second;
   }
 
-  int GetValue(const std::string& key) const {
+  V GetValue(const K& key) const {
     auto found = data_.find(key);
     if (found == data_.end())
       return 0;
     return found->second;
   }
 
-  std::map<std::string, int> data_;
+  std::map<K, V> data_;
 };
 
 int main() {
-  Dictionary dict;
+  Dictionary<std::string, int> dict;
   for (int i = 1; i < 200; ++i) {
     std::string key = "QuiteRandomString" + std::to_string(i);
     dict.Add(key, i);

@@ -29,7 +29,7 @@ std::string SomeItemHash(unsigned item) {
 
 int main() {
   StringHash hash_store;
-  for (unsigned i = 0; i < 100000; ++i)
+  for (unsigned i = 0; i < 100; ++i)
     hash_store.Add(SomeItemHash(i));
 
   std::vector<std::string> incoming_hashes;

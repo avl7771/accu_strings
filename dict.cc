@@ -22,7 +22,7 @@ struct Dictionary {
 
 int main() {
   Dictionary dict;
-  for (int i = 1; i < 1000; ++i) {
+  for (int i = 1; i < 200; ++i) {
     std::string key = "QuiteRandomString" + std::to_string(i);
     dict.Add(key, i);
   }
@@ -30,7 +30,7 @@ int main() {
   TimeCounter counter;
 
   int sum = 0;
-  for (unsigned i = 0; i < 100000; ++i) {
+  for (unsigned i = 0; i < 1000000; ++i) {
     sum += dict.GetValue("QuiteRandomString9");
   }
 

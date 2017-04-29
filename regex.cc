@@ -2,14 +2,12 @@
 #include <regex>
 #include <string>
 
-void CheckPools(const std::string& input) {
+bool CheckPools(const std::string& input) {
   std::regex regex("(.*(swimming )?pool(s)?.*)|(.*bathing.*)",
                    std::regex::icase);
 
   std::smatch matches;
-  if (std::regex_match(input, matches, regex)) {
-    std::cout << "It has a pool!" << std::endl;
-  }
+  return std::regex_match(input, matches, regex);
 }
 
 int main() {
@@ -17,5 +15,9 @@ int main() {
   for (std::string input_line; std::getline(std::cin, input_line);) {
     description.append(input_line);
   }
-  CheckPools(description);
+  if (CheckPools(description)) {
+    std::cout << "It has a pool!" << std::endl;
+  } else {
+    std::cout << "There is no pool :(" << std::endl;
+  }
 }
